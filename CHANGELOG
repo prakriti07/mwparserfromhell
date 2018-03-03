@@ -1,3 +1,10 @@
+v0.5.1 (released March 03, 2018):
+
+- Improved behavior when adding parameters to templates (via Template.add())
+  with poorly formatted whitespace conventions. (#185)
+- Fixed the parser getting stuck in deeply nested HTML tags with unclosed,
+  quoted attributes. (#190)
+
 v0.5 (released June 23, 2017):
 
 - Added Wikicode.contains() to determine whether a Node or Wikicode object is

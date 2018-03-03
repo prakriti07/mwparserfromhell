@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v0.5.1
+------
+
+`Released March 03, 2018 <https://github.com/earwig/mwparserfromhell/tree/v0.5.1>`_
+(`changes <https://github.com/earwig/mwparserfromhell/compare/v0.5...v0.5.1>`__):
+
+- Improved behavior when adding parameters to templates (via
+  :meth:`.Template.add`) with poorly formatted whitespace conventions.
+  (`#185 <https://github.com/earwig/mwparserfromhell/issues/185>`_)
+- Fixed the parser getting stuck in deeply nested HTML tags with unclosed,
+  quoted attributes.
+  (`#190 <https://github.com/earwig/mwparserfromhell/issues/190>`_)
+
 v0.5
 ----
 
