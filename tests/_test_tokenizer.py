@@ -109,7 +109,7 @@ class TokenizerTestCase(object):
                 print(error.format(filename))
                 continue
             if data["input"] is None or data["output"] is None:
-                error = "Test '{0}' in '{1}' was ignored because it lacked an input or an output"
+                error = "Test '{}' in '{}' was ignored because it lacked an input or an output"
                 print(error.format(data["name"], filename))
                 continue
 
@@ -118,7 +118,7 @@ class TokenizerTestCase(object):
             if restrict and data["name"] != restrict:
                 continue
 
-            fname = "test_{0}{1}_{2}".format(name, number, data["name"])
+            fname = "test_{}{}_{}".format(name, number, data["name"])
             meth = cls._build_test_method(fname, data)
             setattr(cls, fname, meth)
 
@@ -126,7 +126,7 @@ class TokenizerTestCase(object):
     def build(cls):
         """Load and install all tests from the 'tokenizer' directory."""
         def load_file(filename, restrict=None):
-            with codecs.open(filename, "rU", encoding="utf8") as fp:
+            with codecs.open(filename, "r", encoding="utf8") as fp:
                 text = fp.read()
                 name = path.split(filename)[1][:-len(extension)]
                 cls._load_tests(filename, name, text, restrict)

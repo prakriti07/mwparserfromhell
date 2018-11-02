@@ -1,10 +1,29 @@
 Changelog
 =========
 
+v0.5.2
+------
+
+`Released November 1, 2018 <https://github.com/earwig/mwparserfromhell/tree/v0.5.2>`_
+(`changes <https://github.com/earwig/mwparserfromhell/compare/v0.5.1...v0.5.2>`__):
+
+- Dropped support for end-of-life Python versions 2.6, 3.2, 3.3.
+  (`#199 <https://github.com/earwig/mwparserfromhell/issues/199>`,
+  `#204 <https://github.com/earwig/mwparserfromhell/pull/204>`)
+- Fixed signals getting stuck inside the C tokenizer until parsing finishes,
+  in pathological cases.
+  (`#206 <https://github.com/earwig/mwparserfromhell/issues/206>`)
+- Fixed `<wbr>` not being considered a single-only tag.
+  (`#200 <https://github.com/earwig/mwparserfromhell/pull/200>`)
+- Fixed a C tokenizer crash on Python 3.7 when compiled with assertions.
+  (`#208 <https://github.com/earwig/mwparserfromhell/issues/208>`)
+- Cleaned up some minor documentation issues.
+  (`#207 <https://github.com/earwig/mwparserfromhell/pull/207>`)
+
 v0.5.1
 ------
 
-`Released March 03, 2018 <https://github.com/earwig/mwparserfromhell/tree/v0.5.1>`_
+`Released March 3, 2018 <https://github.com/earwig/mwparserfromhell/tree/v0.5.1>`_
 (`changes <https://github.com/earwig/mwparserfromhell/compare/v0.5...v0.5.1>`__):
 
 - Improved behavior when adding parameters to templates (via
