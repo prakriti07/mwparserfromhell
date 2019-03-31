@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2018 Ben Kurtovic <ben.kurtovic@gmail.com>
+Copyright (C) 2012-2019 Ben Kurtovic <ben.kurtovic@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -2254,6 +2254,7 @@ static int Tokenizer_parse_table(Tokenizer* self)
         Py_DECREF(padding);
         Py_DECREF(style);
         while (!Tokenizer_IS_CURRENT_STACK(self, restore_point)) {
+            Tokenizer_memoize_bad_route(self);
             trash = Tokenizer_pop(self);
             Py_XDECREF(trash);
         }

@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v0.5.3
+------
+
+`Released March 30, 2019 <https://github.com/earwig/mwparserfromhell/tree/v0.5.3>`_
+(`changes <https://github.com/earwig/mwparserfromhell/compare/v0.5.2...v0.5.3>`__):
+
+- Fixed manual construction of Node objects, previously unsupported.
+  (`#214 <https://github.com/earwig/mwparserfromhell/issues/214>`_)
+- Fixed :class:`.Wikicode` transformation methods (:meth:`.Wikicode.replace`,
+  :meth:`.Wikicode.remove`, etc.) when passed an empty section as an argument.
+  (`#212 <https://github.com/earwig/mwparserfromhell/issues/212>`_)
+- Fixed the parser getting stuck inside malformed tables.
+  (`#206 <https://github.com/earwig/mwparserfromhell/issues/206>`_)
+
 v0.5.2
 ------
 
@@ -8,17 +22,17 @@ v0.5.2
 (`changes <https://github.com/earwig/mwparserfromhell/compare/v0.5.1...v0.5.2>`__):
 
 - Dropped support for end-of-life Python versions 2.6, 3.2, 3.3.
-  (`#199 <https://github.com/earwig/mwparserfromhell/issues/199>`,
-  `#204 <https://github.com/earwig/mwparserfromhell/pull/204>`)
+  (`#199 <https://github.com/earwig/mwparserfromhell/issues/199>`_,
+  `#204 <https://github.com/earwig/mwparserfromhell/pull/204>`_)
 - Fixed signals getting stuck inside the C tokenizer until parsing finishes,
   in pathological cases.
-  (`#206 <https://github.com/earwig/mwparserfromhell/issues/206>`)
+  (`#206 <https://github.com/earwig/mwparserfromhell/issues/206>`_)
 - Fixed `<wbr>` not being considered a single-only tag.
-  (`#200 <https://github.com/earwig/mwparserfromhell/pull/200>`)
+  (`#200 <https://github.com/earwig/mwparserfromhell/pull/200>`_)
 - Fixed a C tokenizer crash on Python 3.7 when compiled with assertions.
-  (`#208 <https://github.com/earwig/mwparserfromhell/issues/208>`)
+  (`#208 <https://github.com/earwig/mwparserfromhell/issues/208>`_)
 - Cleaned up some minor documentation issues.
-  (`#207 <https://github.com/earwig/mwparserfromhell/pull/207>`)
+  (`#207 <https://github.com/earwig/mwparserfromhell/pull/207>`_)
 
 v0.5.1
 ------

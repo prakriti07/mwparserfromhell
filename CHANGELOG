@@ -1,3 +1,10 @@
+v0.5.3 (released March 30, 2019):
+
+- Fixed manual construction of Node objects, previously unsupported. (#214)
+- Fixed Wikicode transformation methods (replace(), remove(), etc.) when passed
+  an empty section as an argument. (#212)
+- Fixed the parser getting stuck inside malformed tables. (#206)
+
 v0.5.2 (released November 1, 2018):
 
 - Dropped support for end-of-life Python versions 2.6, 3.2, 3.3. (#199, #204)

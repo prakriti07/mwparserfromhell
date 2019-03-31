@@ -1,6 +1,6 @@
 # -*- coding: utf-8  -*-
 #
-# Copyright (C) 2012-2018 Ben Kurtovic <ben.kurtovic@gmail.com>
+# Copyright (C) 2012-2019 Ben Kurtovic <ben.kurtovic@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -455,7 +455,7 @@ class Tokenizer(object):
         else:
             self._parse_free_uri_scheme()
             invalid = ("\n", " ", "[", "]")
-            punct = tuple(",;\.:!?)")
+            punct = tuple(",;\\.:!?)")
         if self._read() is self.END or self._read()[0] in invalid:
             self._fail_route()
         tail = ""
@@ -1133,6 +1133,7 @@ class Tokenizer(object):
             table = self._parse(contexts.TABLE_OPEN)
         except BadRoute:
             while self._stack_ident != restore_point:
+                self._memoize_bad_route()
                 self._pop()
             self._head = reset
             self._emit_text("{")
