@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.5.4
+------
+
+`Released May 15, 2019 <https://github.com/earwig/mwparserfromhell/tree/v0.5.4>`_
+(`changes <https://github.com/earwig/mwparserfromhell/compare/v0.5.3...v0.5.4>`__):
+
+- Fixed an unlikely crash in the C tokenizer when interrupted while parsing
+  a heading.
+
 v0.5.3
 ------
 
