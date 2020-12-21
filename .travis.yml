@@ -1,16 +1,19 @@
+dist: xenial
 language: python
 python:
-    - 2.7
-    - 3.4
     - 3.5
     - 3.6
-    - nightly
-sudo: false
+    - 3.7
+    - 3.8
+    - 3.9
+arch:
+  - amd64
+  - ppc64le
 install:
     - pip install coveralls
-    - python setup.py build
+    - python setup.py develop
 script:
-    - coverage run --source=mwparserfromhell setup.py -q test
+    - coverage run --source=mwparserfromhell -m unittest discover
 after_success:
     - coveralls
 env:

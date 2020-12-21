@@ -1,9 +1,9 @@
 mwparserfromhell
 ================
 
-.. image:: https://img.shields.io/travis/earwig/mwparserfromhell/develop.svg
+.. image:: https://api.travis-ci.com/earwig/mwparserfromhell.svg?branch=develop
   :alt: Build Status
-  :target: http://travis-ci.org/earwig/mwparserfromhell
+  :target: https://travis-ci.org/earwig/mwparserfromhell
 
 .. image:: https://img.shields.io/coveralls/earwig/mwparserfromhell/develop.svg
   :alt: Coverage Status
@@ -11,7 +11,7 @@ mwparserfromhell
 
 **mwparserfromhell** (the *MediaWiki Parser from Hell*) is a Python package
 that provides an easy-to-use and outrageously powerful parser for MediaWiki_
-wikicode. It supports Python 2 and Python 3.
+wikicode. It supports Python 3.5+.
 
 Developed by Earwig_ with contributions from `Σ`_, Legoktm_, and others.
 Full documentation is available on ReadTheDocs_. Development occurs on GitHub_.
@@ -30,7 +30,7 @@ Alternatively, get the latest development version::
     python setup.py install
 
 You can run the comprehensive unit testing suite with
-``python setup.py test -q``.
+``python -m unittest discover``.
 
 Usage
 -----
@@ -41,8 +41,7 @@ Normal usage is rather straightforward (where ``text`` is page text):
 >>> wikicode = mwparserfromhell.parse(text)
 
 ``wikicode`` is a ``mwparserfromhell.Wikicode`` object, which acts like an
-ordinary ``str`` object (or ``unicode`` in Python 2) with some extra methods.
-For example:
+ordinary ``str`` object with some extra methods. For example:
 
 >>> text = "I has a template! {{foo|bar|baz|eggs=spam}} See it?"
 >>> wikicode = mwparserfromhell.parse(text)
@@ -111,8 +110,6 @@ saving the page!) by calling ``str()`` on it:
 >>> text == code
 True
 
-Likewise, use ``unicode(code)`` in Python 2.
-
 Limitations
 -----------
 
@@ -177,36 +174,44 @@ If you're using Pywikibot_, your code might look like this:
         text = page.get()
         return mwparserfromhell.parse(text)
 
-If you're not using a library, you can parse any page using the following
-Python 3 code (via the API_):
+If you're not using a library, you can parse any page with the following
+Python 3 code (using the API_ and the requests_ library):
 
 .. code-block:: python
 
-    import json
-    from urllib.parse import urlencode
-    from urllib.request import urlopen
     import mwparserfromhell
+    import requests
+
     API_URL = "https://en.wikipedia.org/w/api.php"
 
     def parse(title):
-        data = {"action": "query", "prop": "revisions", "rvprop": "content",
-                "rvslots": "main", "rvlimit": 1, "titles": title,
-                "format": "json", "formatversion": "2"}
-        raw = urlopen(API_URL, urlencode(data).encode()).read()
-        res = json.loads(raw)
+        params = {
+            "action": "query",
+            "prop": "revisions",
+            "rvprop": "content",
+            "rvslots": "main",
+            "rvlimit": 1,
+            "titles": title,
+            "format": "json",
+            "formatversion": "2",
+        }
+        headers = {"User-Agent": "My-Bot-Name/1.0"}
+        req = requests.get(API_URL, headers=headers, params=params)
+        res = req.json()
         revision = res["query"]["pages"][0]["revisions"][0]
         text = revision["slots"]["main"]["content"]
         return mwparserfromhell.parse(text)
 
-.. _MediaWiki:              http://mediawiki.org
-.. _ReadTheDocs:            http://mwparserfromhell.readthedocs.io
-.. _Earwig:                 http://en.wikipedia.org/wiki/User:The_Earwig
-.. _Σ:                      http://en.wikipedia.org/wiki/User:%CE%A3
-.. _Legoktm:                http://en.wikipedia.org/wiki/User:Legoktm
+.. _MediaWiki:              https://www.mediawiki.org
+.. _ReadTheDocs:            https://mwparserfromhell.readthedocs.io
+.. _Earwig:                 https://en.wikipedia.org/wiki/User:The_Earwig
+.. _Σ:                      https://en.wikipedia.org/wiki/User:%CE%A3
+.. _Legoktm:                https://en.wikipedia.org/wiki/User:Legoktm
 .. _GitHub:                 https://github.com/earwig/mwparserfromhell
-.. _Python Package Index:   http://pypi.python.org
-.. _get pip:                http://pypi.python.org/pypi/pip
+.. _Python Package Index:   https://pypi.org/
+.. _get pip:                https://pypi.org/project/pip/
 .. _Word-ending links:      https://www.mediawiki.org/wiki/Help:Links#linktrail
 .. _EarwigBot:              https://github.com/earwig/earwigbot
 .. _Pywikibot:              https://www.mediawiki.org/wiki/Manual:Pywikibot
-.. _API:                    http://mediawiki.org/wiki/API
+.. _API:                    https://www.mediawiki.org/wiki/API:Main_page
+.. _requests:               https://2.python-requests.org

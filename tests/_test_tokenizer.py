@@ -1,6 +1,4 @@
-# -*- coding: utf-8  -*-
-#
-# Copyright (C) 2012-2016 Ben Kurtovic <ben.kurtovic@gmail.com>
+# Copyright (C) 2012-2020 Ben Kurtovic <ben.kurtovic@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +18,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from __future__ import print_function, unicode_literals
 import codecs
 from os import listdir, path
 import sys
+import warnings
 
-from mwparserfromhell.compat import py3k, str
 from mwparserfromhell.parser import tokens
 from mwparserfromhell.parser.builder import Builder
 
 class _TestParseError(Exception):
     """Raised internally when a test could not be parsed."""
-    pass
 
 
-class TokenizerTestCase(object):
+class TokenizerTestCase:
     """A base test case for tokenizers, whose tests are loaded dynamically.
 
     Subclassed along with unittest.TestCase to form TestPyTokenizer and
@@ -43,7 +39,7 @@ class TokenizerTestCase(object):
     """
 
     @staticmethod
-    def _build_test_method(funcname, data):
+    def _build_test_method(data):
         """Create and return a method to be treated as a test case method.
 
         *data* is a dict containing multiple keys: the *input* text to be
@@ -59,8 +55,6 @@ class TokenizerTestCase(object):
                 actual = self.tokenizer().tokenize(data["input"])
             self.assertEqual(expected, actual)
 
-        if not py3k:
-            inner.__name__ = funcname.encode("utf8")
         inner.__doc__ = data["label"]
         return inner
 
@@ -83,7 +77,7 @@ class TokenizerTestCase(object):
                 try:
                     data["output"] = eval(raw, vars(tokens))
                 except Exception as err:
-                    raise _TestParseError(err)
+                    raise _TestParseError(err) from err
 
     @classmethod
     def _load_tests(cls, filename, name, text, restrict=None):
@@ -98,19 +92,19 @@ class TokenizerTestCase(object):
             except _TestParseError as err:
                 if data["name"]:
                     error = "Could not parse test '{0}' in '{1}':\n\t{2}"
-                    print(error.format(data["name"], filename, err))
+                    warnings.warn(error.format(data["name"], filename, err))
                 else:
                     error = "Could not parse a test in '{0}':\n\t{1}"
-                    print(error.format(filename, err))
+                    warnings.warn(error.format(filename, err))
                 continue
 
             if not data["name"]:
                 error = "A test in '{0}' was ignored because it lacked a name"
-                print(error.format(filename))
+                warnings.warn(error.format(filename))
                 continue
             if data["input"] is None or data["output"] is None:
                 error = "Test '{}' in '{}' was ignored because it lacked an input or an output"
-                print(error.format(data["name"], filename))
+                warnings.warn(error.format(data["name"], filename))
                 continue
 
             number = str(counter).zfill(digits)
@@ -119,7 +113,7 @@ class TokenizerTestCase(object):
                 continue
 
             fname = "test_{}{}_{}".format(name, number, data["name"])
-            meth = cls._build_test_method(fname, data)
+            meth = cls._build_test_method(data)
             setattr(cls, fname, meth)
 
     @classmethod

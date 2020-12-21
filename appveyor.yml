@@ -1,6 +1,6 @@
 # This config file is used by appveyor.com to build Windows release binaries
 
-version: 0.5.4-b{build}
+version: 0.6-b{build}
 
 branches:
   only:
@@ -9,42 +9,21 @@ branches:
 
 skip_tags: true
 
+image: Visual Studio 2019
+
 environment:
   global:
     # See: http://stackoverflow.com/a/13751649/163740
     WRAPPER: "cmd /E:ON /V:ON /C .\\scripts\\win_wrapper.cmd"
-    PIP:     "%WRAPPER% %PYTHON%\\python.exe -m pip"
-    SETUPPY: "%WRAPPER% %PYTHON%\\python.exe setup.py --with-extension"
-    TWINE:   "%WRAPPER% %PYTHON%\\python.exe -m twine"
+    PYEXE:   "%WRAPPER% %PYTHON%\\python.exe"
+    SETUPPY: "%PYEXE% setup.py --with-extension"
+    PIP:     "%PYEXE% -m pip"
+    TWINE:   "%PYEXE% -m twine"
     PYPI_USERNAME: "earwigbot"
     PYPI_PASSWORD:
       secure: gOIcvPxSC2ujuhwOzwj3v8xjq3CCYd8keFWVnguLM+gcL0e02qshDHy7gwZZwj0+
 
   matrix:
-    - PYTHON:         "C:\\Python27"
-      PYTHON_VERSION: "2.7"
-      PYTHON_ARCH:    "32"
-
-    - PYTHON:         "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7"
-      PYTHON_ARCH:    "64"
-
-    - PYTHON:         "C:\\Python34"
-      PYTHON_VERSION: "3.4"
-      PYTHON_ARCH:    "32"
-
-    - PYTHON:         "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4"
-      PYTHON_ARCH:    "64"
-
-    - PYTHON:         "C:\\Python35"
-      PYTHON_VERSION: "3.5"
-      PYTHON_ARCH:    "32"
-
-    - PYTHON:         "C:\\Python35-x64"
-      PYTHON_VERSION: "3.5"
-      PYTHON_ARCH:    "64"
-
     - PYTHON:         "C:\\Python36"
       PYTHON_VERSION: "3.6"
       PYTHON_ARCH:    "32"
@@ -61,15 +40,32 @@ environment:
       PYTHON_VERSION: "3.7"
       PYTHON_ARCH:    "64"
 
+    - PYTHON:         "C:\\Python38"
+      PYTHON_VERSION: "3.8"
+      PYTHON_ARCH:    "32"
+
+    - PYTHON:         "C:\\Python38-x64"
+      PYTHON_VERSION: "3.8"
+      PYTHON_ARCH:    "64"
+
+    - PYTHON:         "C:\\Python39"
+      PYTHON_VERSION: "3.9"
+      PYTHON_ARCH:    "32"
+
+    - PYTHON:         "C:\\Python39-x64"
+      PYTHON_VERSION: "3.9"
+      PYTHON_ARCH:    "64"
+
 install:
   - "%PIP% install --disable-pip-version-check --user --upgrade pip"
   - "%PIP% install wheel twine"
 
 build_script:
   - "%SETUPPY% build"
+  - "%SETUPPY% develop --user"
 
 test_script:
-  - "%SETUPPY% -q test"
+  - "%PYEXE% -m unittest discover"
 
 after_test:
   - "%SETUPPY% bdist_wheel"
