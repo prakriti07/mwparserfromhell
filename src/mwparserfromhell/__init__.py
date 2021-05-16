@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2019 Ben Kurtovic <ben.kurtovic@gmail.com>
+# Copyright (C) 2012-2021 Ben Kurtovic <ben.kurtovic@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,30 +18,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import unittest
+"""
+`mwparserfromhell <https://github.com/earwig/mwparserfromhell>`_ (the MediaWiki
+Parser from Hell) is a Python package that provides an easy-to-use and
+outrageously powerful parser for `MediaWiki <https://www.mediawiki.org>`_ wikicode.
+"""
 
-from mwparserfromhell.parser import contexts
-from mwparserfromhell.parser.tokenizer import Tokenizer
+__author__ = "Ben Kurtovic"
+__copyright__ = "Copyright (C) 2012-2021 Ben Kurtovic"
+__license__ = "MIT License"
+__version__ = "0.7.dev0"
+__email__ = "ben.kurtovic@gmail.com"
 
-from ._test_tokenizer import TokenizerTestCase
+from . import (definitions, nodes, parser, smart_list, string_mixin,
+               utils, wikicode)
 
-class TestPyTokenizer(TokenizerTestCase, unittest.TestCase):
-    """Test cases for the Python tokenizer."""
-
-    @classmethod
-    def setUpClass(cls):
-        cls.tokenizer = Tokenizer
-
-    if not TokenizerTestCase.skip_others:
-        def test_uses_c(self):
-            """make sure the Python tokenizer identifies as not using C"""
-            self.assertFalse(Tokenizer.USES_C)
-            self.assertFalse(Tokenizer().USES_C)
-
-    def test_describe_context(self):
-        self.assertEqual("", contexts.describe(0))
-        ctx = contexts.describe(contexts.TEMPLATE_PARAM_KEY|contexts.HAS_TEXT)
-        self.assertEqual("TEMPLATE_PARAM_KEY|HAS_TEXT", ctx)
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+parse = utils.parse_anything

@@ -18,65 +18,67 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import unittest
+"""
+Test cases for the Heading node.
+"""
+
+import pytest
 
 from mwparserfromhell.nodes import Heading, Text
+from .conftest import assert_wikicode_equal, wrap, wraptext
 
-from ._test_tree_equality import TreeEqualityTestCase, wrap, wraptext
+def test_str():
+    """test Heading.__str__()"""
+    node = Heading(wraptext("foobar"), 2)
+    assert "==foobar==" == str(node)
+    node2 = Heading(wraptext(" zzz "), 5)
+    assert "===== zzz =====" == str(node2)
 
-class TestHeading(TreeEqualityTestCase):
-    """Test cases for the Heading node."""
+def test_children():
+    """test Heading.__children__()"""
+    node = Heading(wrap([Text("foo"), Text("bar")]), 3)
+    gen = node.__children__()
+    assert node.title == next(gen)
+    with pytest.raises(StopIteration):
+        next(gen)
 
-    def test_str(self):
-        """test Heading.__str__()"""
-        node = Heading(wraptext("foobar"), 2)
-        self.assertEqual("==foobar==", str(node))
-        node2 = Heading(wraptext(" zzz "), 5)
-        self.assertEqual("===== zzz =====", str(node2))
+def test_strip():
+    """test Heading.__strip__()"""
+    node = Heading(wraptext("foobar"), 3)
+    assert "foobar" == node.__strip__()
 
-    def test_children(self):
-        """test Heading.__children__()"""
-        node = Heading(wrap([Text("foo"), Text("bar")]), 3)
-        gen = node.__children__()
-        self.assertEqual(node.title, next(gen))
-        self.assertRaises(StopIteration, next, gen)
+def test_showtree():
+    """test Heading.__showtree__()"""
+    output = []
+    getter = object()
+    get = lambda code: output.append((getter, code))
+    node1 = Heading(wraptext("foobar"), 3)
+    node2 = Heading(wraptext(" baz "), 4)
+    node1.__showtree__(output.append, get, None)
+    node2.__showtree__(output.append, get, None)
+    valid = ["===", (getter, node1.title), "===",
+             "====", (getter, node2.title), "===="]
+    assert valid == output
 
-    def test_strip(self):
-        """test Heading.__strip__()"""
-        node = Heading(wraptext("foobar"), 3)
-        self.assertEqual("foobar", node.__strip__())
+def test_title():
+    """test getter/setter for the title attribute"""
+    title = wraptext("foobar")
+    node = Heading(title, 3)
+    assert title is node.title
+    node.title = "héhehé"
+    assert_wikicode_equal(wraptext("héhehé"), node.title)
 
-    def test_showtree(self):
-        """test Heading.__showtree__()"""
-        output = []
-        getter = object()
-        get = lambda code: output.append((getter, code))
-        node1 = Heading(wraptext("foobar"), 3)
-        node2 = Heading(wraptext(" baz "), 4)
-        node1.__showtree__(output.append, get, None)
-        node2.__showtree__(output.append, get, None)
-        valid = ["===", (getter, node1.title), "===",
-                 "====", (getter, node2.title), "===="]
-        self.assertEqual(valid, output)
-
-    def test_title(self):
-        """test getter/setter for the title attribute"""
-        title = wraptext("foobar")
-        node = Heading(title, 3)
-        self.assertIs(title, node.title)
-        node.title = "héhehé"
-        self.assertWikicodeEqual(wraptext("héhehé"), node.title)
-
-    def test_level(self):
-        """test getter/setter for the level attribute"""
-        node = Heading(wraptext("foobar"), 3)
-        self.assertEqual(3, node.level)
-        node.level = 5
-        self.assertEqual(5, node.level)
-        self.assertRaises(ValueError, setattr, node, "level", 0)
-        self.assertRaises(ValueError, setattr, node, "level", 7)
-        self.assertRaises(ValueError, setattr, node, "level", "abc")
-        self.assertRaises(ValueError, setattr, node, "level", False)
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+def test_level():
+    """test getter/setter for the level attribute"""
+    node = Heading(wraptext("foobar"), 3)
+    assert 3 == node.level
+    node.level = 5
+    assert 5 == node.level
+    with pytest.raises(ValueError):
+        node.__setattr__("level", 0)
+    with pytest.raises(ValueError):
+        node.__setattr__("level", 7)
+    with pytest.raises(ValueError):
+        node.__setattr__("level", "abc")
+    with pytest.raises(ValueError):
+        node.__setattr__("level", False)

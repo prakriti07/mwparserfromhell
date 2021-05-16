@@ -18,44 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import unittest
+"""
+Test cases for the Comment node.
+"""
+
+import pytest
 
 from mwparserfromhell.nodes import Comment
 
-from ._test_tree_equality import TreeEqualityTestCase
+def test_str():
+    """test Comment.__str__()"""
+    node = Comment("foobar")
+    assert "<!--foobar-->" == str(node)
 
-class TestComment(TreeEqualityTestCase):
-    """Test cases for the Comment node."""
+def test_children():
+    """test Comment.__children__()"""
+    node = Comment("foobar")
+    gen = node.__children__()
+    with pytest.raises(StopIteration):
+        next(gen)
 
-    def test_str(self):
-        """test Comment.__str__()"""
-        node = Comment("foobar")
-        self.assertEqual("<!--foobar-->", str(node))
+def test_strip():
+    """test Comment.__strip__()"""
+    node = Comment("foobar")
+    assert node.__strip__() is None
 
-    def test_children(self):
-        """test Comment.__children__()"""
-        node = Comment("foobar")
-        gen = node.__children__()
-        self.assertRaises(StopIteration, next, gen)
+def test_showtree():
+    """test Comment.__showtree__()"""
+    output = []
+    node = Comment("foobar")
+    node.__showtree__(output.append, None, None)
+    assert ["<!--foobar-->"] == output
 
-    def test_strip(self):
-        """test Comment.__strip__()"""
-        node = Comment("foobar")
-        self.assertIs(None, node.__strip__())
-
-    def test_showtree(self):
-        """test Comment.__showtree__()"""
-        output = []
-        node = Comment("foobar")
-        node.__showtree__(output.append, None, None)
-        self.assertEqual(["<!--foobar-->"], output)
-
-    def test_contents(self):
-        """test getter/setter for the contents attribute"""
-        node = Comment("foobar")
-        self.assertEqual("foobar", node.contents)
-        node.contents = "barfoo"
-        self.assertEqual("barfoo", node.contents)
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+def test_contents():
+    """test getter/setter for the contents attribute"""
+    node = Comment("foobar")
+    assert "foobar" == node.contents
+    node.contents = "barfoo"
+    assert "barfoo" == node.contents
